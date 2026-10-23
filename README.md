@@ -1,11 +1,9 @@
 # Secret Hitler study
 
-Private study of [Secret Hitler](https://www.secrethitler.com/) as a
+Study of [Secret Hitler](https://www.secrethitler.com/) as a
 [`@very-coffee/statespace`](https://www.npmjs.com/package/@very-coffee/statespace)
 executable state graph. Configurable for **5–10 players** with official
 role mixes and Fascist power tracks.
-
-This package is **not** part of the public statespace repository.
 
 ## Attribution / license
 
