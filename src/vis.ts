@@ -1,11 +1,17 @@
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { instance } from "@viz-js/viz";
-import { bfs, Explorer, jsonCodex, type MarkovGraph } from "@very-coffee/statespace";
+import {
+  bfs,
+  dfs,
+  Explorer,
+  jsonCodex,
+  type MarkovGraph,
+} from "@very-coffee/statespace";
 import type { PlayerCount } from "./ruleset";
 import { reset } from "./setup";
 import type { SecretHitlerState } from "./state";
-import { studyDataDir, type StudyConfig } from "./studyPath";
+import { studyDataDir, type StudyConfig, type VisMode } from "./studyPath";
 import {
   createStateSpace,
   displayBallotName,
@@ -441,6 +447,8 @@ export type VisualizeOptions = {
   seed: number;
   playerCount: PlayerCount;
   maxStates?: number;
+  /** Exploration study: breadth-first (default) or depth-first. */
+  mode?: VisMode;
   /** Basename without extension. Default `graph`. */
   basename?: string;
 };
@@ -463,6 +471,7 @@ export async function visualize(options: VisualizeOptions): Promise<VisualizeRes
     seed,
     playerCount,
     maxStates = 500,
+    mode = "bfs",
     basename = "graph",
   } = options;
 
@@ -471,6 +480,7 @@ export async function visualize(options: VisualizeOptions): Promise<VisualizeRes
     players: playerCount,
     seed,
     maxStates,
+    mode,
   };
   const outDir = studyDataDir(config);
 
@@ -480,9 +490,10 @@ export async function visualize(options: VisualizeOptions): Promise<VisualizeRes
   const initialHash = await explorer.encode(initial);
 
   // Vis explores for structure, not a shortest win-path. Stopping on the first
-  // terminal win leaves most of the BFS frontier as fake "leaves" (discovered
-  // as edge targets but never expanded). Only the state cap should stop us.
-  const result = await explorer.study(bfs, {
+  // terminal win leaves most of the frontier as fake "leaves" (discovered as
+  // edge targets but never expanded). Only the state cap should stop us.
+  const study = mode === "dfs" ? dfs : bfs;
+  const result = await explorer.study(study, {
     initialState: initial,
     exitConditions: [
       async (exp) => {

@@ -50,25 +50,31 @@ bun run vis -- --players 5 --seed 42 --max-states 200
 # → .data/vis_p5_seed42_m200/{config.json,graph.dot,graph.svg,graph.html}
 open .data/vis_p5_seed42_m200/graph.html
 
+# Same run with depth-first exploration
+bun run vis -- --players 5 --seed 42 --max-states 200 --mode dfs
+# → .data/vis_p5_seed42_m200_dfs/…
+
 bun test
 ```
 
-Default `--players` is `5`.
+Default `--players` is `5`. Default `--mode` for `vis` is `bfs`.
 
 ### Study artifacts (`.data/`)
 
 Each unique study config gets its own directory under **`.data/`** (gitignored),
-named from a stable encoding, e.g. `vis_p5_seed42_m500`. Same config ⇒ same
-folder (overwrites on re-run). A `config.json` records the exact parameters.
+named from a stable encoding, e.g. `vis_p5_seed42_m500` (BFS) or
+`vis_p5_seed42_m500_dfs` (DFS). Same config ⇒ same folder (overwrites on
+re-run). A `config.json` records the exact parameters.
 
 ### Visualization
 
-`bun run vis` runs a seeded BFS (same as solve), converts `Explorer.graph` to
-Graphviz DOT, and renders SVG via [`@viz-js/viz`](https://www.npmjs.com/package/@viz-js/viz).
+`bun run vis` runs a seeded exploration (`--mode bfs` by default, or `dfs`),
+converts `Explorer.graph` to Graphviz DOT, and renders SVG via
+[`@viz-js/viz`](https://www.npmjs.com/package/@viz-js/viz).
 Open **`graph.html`** in the study dir for pan/drag and wheel zoom; the graph
-starts fitted in the viewport. Layout is **left→right** (BFS depth) so ballot
-fan-out grows vertically instead of an ultra-wide strip. HUD: Fit / + / −. **Hover a node** to inspect
-the full state JSON; **click** to pin the panel (Esc / ✕ to close).
+starts fitted in the viewport. Layout is **left→right** so ballot fan-out grows
+vertically instead of an ultra-wide strip. HUD: Fit / + / −. **Hover a node** to
+inspect the full state JSON; **click** to pin the panel (Esc / ✕ to close).
 
 Nodes are labeled with phase / tracks / president; start is blue, Liberal wins
 green, Fascist wins red. `vis` stops only on `--max-states` (it does **not**

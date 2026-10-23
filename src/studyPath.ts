@@ -7,12 +7,15 @@ export const DATA_ROOT = ".data";
 /**
  * Canonical study identity. Same encoding ⇒ same directory under `.data/`.
  */
+export type VisMode = "bfs" | "dfs";
+
 export type StudyConfig =
   | {
       kind: "vis";
       players: PlayerCount;
       seed: number;
       maxStates: number;
+      mode: VisMode;
     }
   | {
       kind: "solve";
@@ -30,8 +33,10 @@ export type StudyConfig =
 /** Filesystem-safe directory name unique for this config. */
 export function encodeStudyConfig(config: StudyConfig): string {
   switch (config.kind) {
-    case "vis":
-      return `vis_p${config.players}_seed${config.seed}_m${config.maxStates}`;
+    case "vis": {
+      const base = `vis_p${config.players}_seed${config.seed}_m${config.maxStates}`;
+      return config.mode === "dfs" ? `${base}_dfs` : base;
+    }
     case "solve":
       return `solve_p${config.players}_seed${config.seed}_m${config.maxStates}`;
     case "sample":

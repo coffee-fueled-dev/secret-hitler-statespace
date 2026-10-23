@@ -2,6 +2,7 @@ import { isPlayerCount, type PlayerCount } from "./ruleset";
 import { reset } from "./setup";
 import { sample } from "./sample";
 import { solve } from "./solve";
+import type { VisMode } from "./studyPath";
 import { visualize } from "./vis";
 
 function usage(): never {
@@ -9,7 +10,14 @@ function usage(): never {
   bun run solve -- --players <5-10> --seed <n> [--max-states <n>]
   bun run sample -- --players <5-10> --runs <n> [--seed <n>]
   bun run demo-reset -- --players <5-10> --seed <n>
-  bun run vis -- --players <5-10> --seed <n> [--max-states <n>]`);
+  bun run vis -- --players <5-10> --seed <n> [--max-states <n>] [--mode bfs|dfs]`);
+  process.exit(1);
+}
+
+function visModeOrDefault(raw: string | undefined): VisMode {
+  if (raw === undefined || raw === "bfs") return "bfs";
+  if (raw === "dfs") return "dfs";
+  console.error(`Invalid --mode ${raw}; expected bfs|dfs`);
   process.exit(1);
 }
 
@@ -100,7 +108,8 @@ async function main() {
     const playerCount = playersOrDefault(args.players);
     const maxStates =
       args["max-states"] !== undefined ? Number(args["max-states"]) : 500;
-    const result = await visualize({ seed, playerCount, maxStates });
+    const mode = visModeOrDefault(args.mode);
+    const result = await visualize({ seed, playerCount, maxStates, mode });
     console.log(JSON.stringify(result, null, 2));
     return;
   }

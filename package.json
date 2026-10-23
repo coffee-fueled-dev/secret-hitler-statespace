@@ -11,7 +11,7 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@very-coffee/statespace": "^0.2.0",
+    "@very-coffee/statespace": "^0.2.1",
     "@viz-js/viz": "^3"
   },
   "devDependencies": {
