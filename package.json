@@ -1,0 +1,23 @@
+{
+  "name": "secret-hitler-study",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "solve": "bun run src/cli.ts solve",
+    "sample": "bun run src/cli.ts sample",
+    "demo-reset": "bun run src/cli.ts demo-reset",
+    "vis": "bun run src/cli.ts vis",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@very-coffee/statespace": "^0.2.0",
+    "@viz-js/viz": "^3"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
